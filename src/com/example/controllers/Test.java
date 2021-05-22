@@ -19,13 +19,9 @@ public class Test {
 	//	private static EntityManager em;
 	private static Validator validator;
 	public static void main(String[] args) {
-		Account account = new Account("admin", "asd", TypeAccount.ADMIN);
-		System.out.println(account.getPassword().getClass().getTypeName());
-		System.out.println(account.getPassword().getClass().getCanonicalName());
-		System.out.println(account.getPassword().getClass().getSimpleName());
-		System.out.println(account.getClass().getDeclaredFields()[0]);
-		System.out.println(account.getPassword().getClass().getTypeName());
-		System.out.println(account.getPassword().getClass().getTypeName());
+		AccountService accountService = new AccountDao();
+		Account account = new Account("admin", accountService.hashPassword("Khanhhoa123@"), TypeAccount.ADMIN);
+		accountService.insert(account);
 //		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 //		validator = factory.getValidator();
 //		validate(account);

@@ -14,29 +14,40 @@ import com.example.services.impl.AccountDao;
 import com.example.services.impl.GenericDao;
 
 public class ValidatorAccount {
-	private static String USERNAME = "username";;
+	private static String USERNAME = "userName";
 
 	private static String PASSWORD = "password";
 
 	private static String TYPEACCOUNT = "typeAccount";
 
-	private static String USERNAME_EXISTS = "username had exists";
+	private static String USERNAME_NOT_EXISTS = "username not exists";
+	
+	private static String PASSWORD_INCORRECT = "password not correct";
 
 	private GenericService<Account> genericService = new GenericDao<>(Account.class);
 
 	private AccountService accountService = new AccountDao();
 
 	public List<CustomError> validateCreate(Account account) {
+		
+		Account accountFind = null;
+		
 		List<CustomError> listCustomErrors = genericService.validator(account);
 
 		if(listCustomErrors.size() >= 1) {
 			return listCustomErrors;
 		}
+		
+		accountFind = (accountService.findById(account.getUserName()));
 
-		if(accountService.findById(account.getUserName()) != null) {
-			listCustomErrors.add(new CustomError(USERNAME, USERNAME_EXISTS));
+		if(accountFind == null) {
+			listCustomErrors.add(new CustomError(USERNAME, USERNAME_NOT_EXISTS));
 		}
+		
+		if(accountService.comparePassword(accountFind.getPassword(),account.getPassword()) == false) {
+			listCustomErrors.add(new CustomError(PASSWORD, PASSWORD_INCORRECT));
+		};
 
-		return null;
+		return listCustomErrors;
 	}
 }

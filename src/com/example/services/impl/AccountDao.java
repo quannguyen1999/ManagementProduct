@@ -34,7 +34,7 @@ public class AccountDao implements AccountService{
 
 	@Override
 	public Boolean comparePassword(String passwordHash, String password) {
-		return BCrypt.checkpw(passwordHash, password);
+		return BCrypt.checkpw(password, passwordHash);
 	}
 
 	@Override
