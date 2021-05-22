@@ -5,10 +5,14 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @EqualsAndHashCode
 @Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderProductPK implements Serializable{
 	/**
 	 * 
@@ -19,5 +23,5 @@ public class OrderProductPK implements Serializable{
 	private String orderId;
 	
 	@Column(name = "productID")
-	private String productId;	
+	private int productId;	
 }

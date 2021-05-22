@@ -75,4 +75,27 @@ public class GenericDao<T> implements GenericService<T>{
 		}  
 		return listCustomErrors;
 	}
+
+
+	@Override
+	public T findOneByIdNumer(int id) {
+		return em.find(clazz, id);
+	}
+
+
+	@Override
+	public Boolean update(T t) {
+		EntityTransaction tr = em.getTransaction();
+		try {
+			tr.begin();
+			em.merge(t);
+			tr.commit();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			tr.rollback();
+			return false;
+		}
+		return true;
+	}
 }

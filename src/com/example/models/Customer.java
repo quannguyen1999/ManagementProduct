@@ -37,7 +37,4 @@ public class Customer implements Serializable{
 	@OneToOne
 	@JoinColumn(name = "account")
 	private Account account;
-	
-	@OneToMany
-	private List<OrderProduct> listOrderProducts;
 }

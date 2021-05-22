@@ -2,7 +2,10 @@ package com.example.models;
 
 import java.io.Serializable;
 
+import javax.annotation.Generated;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -24,7 +27,8 @@ import lombok.NoArgsConstructor;
 @Table
 public class Product implements Serializable{
 	@Id
-	private String productId;
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	private int productId;
 	
 	@NotEmpty
 	private String name;
@@ -46,4 +50,19 @@ public class Product implements Serializable{
 	private TypeConditionProduct typeConditionProduct;
 	
 	private String image;
+
+	public Product(String name, Float unitPrice, int unitInStock, String description, String manufacturer,
+			String category, TypeConditionProduct typeConditionProduct, String image) {
+		super();
+		this.name = name;
+		this.unitPrice = unitPrice;
+		this.unitInStock = unitInStock;
+		this.description = description;
+		this.manufacturer = manufacturer;
+		this.category = category;
+		this.typeConditionProduct = typeConditionProduct;
+		this.image = image;
+	}
+	
+	
 }

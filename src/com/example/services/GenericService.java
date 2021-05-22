@@ -15,6 +15,10 @@ public interface GenericService<T> {
 	
 	T findOne(String id);
 	
+	T findOneByIdNumer(int id);
+	
+	Boolean update(T t);
+	
 	//Lấy ra lỗi được định nghĩa trong object
 	List<CustomError> validator(T t);
 }

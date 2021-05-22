@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 
 import com.example.models.Account;
 import com.example.models.CustomError;
+import com.example.services.AccountService;
+import com.example.services.impl.AccountDao;
 import com.example.validations.AccountValidator;
 
 @WebServlet(urlPatterns = { "/login" })
@@ -25,7 +27,8 @@ public class LoginServlet extends HttpServlet {
 	private static String LOGIN_PAGE = "login.jsp";
 	private static String LOGIN_SUCCESS = "loginSuccess.jsp";
 
-	private AccountValidator validatorAccount = new AccountValidator();
+	
+	private AccountService accountService = new AccountDao();
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)  
 			throws ServletException, IOException {  
@@ -33,14 +36,15 @@ public class LoginServlet extends HttpServlet {
 		String name=request.getParameter("username");  
 		String password=request.getParameter("password");
 
-		List<CustomError> listCustomErrors = validatorAccount.validateCreate(new Account(name, password, null));
+		List<CustomError> listCustomErrors = AccountValidator.validateCreate(new Account(name, password, null));
 
 		if(listCustomErrors.size() >= 1) {
 			request.setAttribute("listCustomerError", listCustomErrors);
 			req = request.getRequestDispatcher(LOGIN_PAGE);
 		}else {
 			HttpSession session = request.getSession();
-			session.setAttribute("loginSuccess", name);
+			session.setAttribute("username", name);
+			session.setAttribute("typeUser", accountService.findById(name).getTypeAccount().toString());
 			req = request.getRequestDispatcher(LOGIN_SUCCESS);
 		}
 

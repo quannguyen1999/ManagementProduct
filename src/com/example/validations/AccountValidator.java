@@ -24,11 +24,11 @@ public class AccountValidator {
 	
 	private static String PASSWORD_INCORRECT = "password not correct";
 
-	private GenericService<Account> genericService = new GenericDao<>(Account.class);
+	private static GenericService<Account> genericService = new GenericDao<>(Account.class);
 
-	private AccountService accountService = new AccountDao();
+	private static AccountService accountService = new AccountDao();
 
-	public List<CustomError> validateCreate(Account account) {
+	public static List<CustomError> validateCreate(Account account) {
 		
 		Account accountFind = null;
 		

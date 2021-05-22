@@ -24,7 +24,6 @@ import lombok.NoArgsConstructor;
 //@Table và @Entity: để tạo bản
 //@ToString: tự tạo to String
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table
@@ -39,5 +38,14 @@ public class OrderProduct implements Serializable{
 	private Date orderDate;
 	
 	private float totalPrice;
+
+	public OrderProduct(String orderId, Customer customer, Date orderDate, float totalPrice) {
+		super();
+		this.orderId = orderId;
+		this.customer = customer;
+		this.orderDate = orderDate;
+		this.totalPrice = totalPrice;
+	}
+	
 	
 }
