@@ -13,7 +13,7 @@ import com.example.services.GenericService;
 import com.example.services.impl.AccountDao;
 import com.example.services.impl.GenericDao;
 
-public class ValidatorAccount {
+public class AccountValidator {
 	private static String USERNAME = "userName";
 
 	private static String PASSWORD = "password";

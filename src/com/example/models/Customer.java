@@ -14,7 +14,11 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+//@Data: tự tạo get và set
+//@AllArgsConstructor: tự tạo constructor có tham số
+//@NoArgsConstructor: tự tạo constructor không có tham số
+//@Table và @Entity: để tạo bản
+//@ToString: tự tạo to String
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

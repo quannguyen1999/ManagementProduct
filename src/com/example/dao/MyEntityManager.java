@@ -3,6 +3,7 @@ package com.example.dao;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 
+//Để kết nối tới database
 public class MyEntityManager {
 	private static MyEntityManager instance = null;
 	private EntityManager entityManager;

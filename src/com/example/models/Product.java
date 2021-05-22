@@ -5,11 +5,18 @@ import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+//@Data: tự tạo get và set
+//@AllArgsConstructor: tự tạo constructor có tham số
+//@NoArgsConstructor: tự tạo constructor không có tham số
+//@Table và @Entity: để tạo bản
+//@ToString: tự tạo to String
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,10 +25,25 @@ import lombok.NoArgsConstructor;
 public class Product implements Serializable{
 	@Id
 	private String productId;
+	
+	@NotEmpty
+	private String name;
+	
+	@NotNull
 	private Float unitPrice;
+	
 	private int unitInStock;
+	
+	@NotEmpty
 	private String description;
+	
+	@NotEmpty
 	private String manufacturer;
+	
+	@NotEmpty
 	private String category;
+	
 	private TypeConditionProduct typeConditionProduct;
+	
+	private String image;
 }
