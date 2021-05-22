@@ -2,6 +2,7 @@ package com.example.controllers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,52 +11,44 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-///**
-// * Servlet Tutorial - Servlet Example
-// */
-@WebServlet(
-		description = "Login Servlet", 
-		urlPatterns = { "/LoginServlet" }, 
-		initParams = { 
-				@WebInitParam(name = "user", value = "Pankaj"), 
-				@WebInitParam(name = "password", value = "journaldev")
-		})
+import com.example.models.Account;
+import com.example.models.CustomError;
+import com.example.services.AccountService;
+import com.example.services.impl.AccountDao;
+import com.example.validations.ValidatorAccount;
+
+@WebServlet(urlPatterns = { "/login" })
 public class LoginServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    
-//	public void init() throws ServletException {
-//		//we can create DB connection resource here and set it to Servlet context
-//		if(getServletContext().getInitParameter("dbURL").equals("jdbc:mysql://localhost/mysql_db") &&
-//				getServletContext().getInitParameter("dbUser").equals("mysql_user") &&
-//				getServletContext().getInitParameter("dbUserPwd").equals("mysql_pwd"))
-//		getServletContext().setAttribute("DB_Success", "True");
-//		else throw new ServletException("DB Connection error");
-//	}
-
 	
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private static final long serialVersionUID = 1L;
+	
+	private AccountService accountDao = new AccountDao();
+	
+	private ValidatorAccount validatorAccount = new ValidatorAccount();
+	
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)  
+			throws ServletException, IOException {  
+		RequestDispatcher req = null;
+		String name=request.getParameter("username");  
+		String password=request.getParameter("password");
 
-		//get request parameters for userID and password
-		String user = request.getParameter("user");
-		String pwd = request.getParameter("pwd");
+		List<CustomError> listCustomErrors = validatorAccount.validateCreate(new Account(name, password, null));
 		
-		//get servlet config init params
-		String userID = getServletConfig().getInitParameter("user");
-		String password = getServletConfig().getInitParameter("password");
-		//logging example
-		log("User="+user+"::password="+pwd);
-		
-		if(userID.equals(user) && password.equals(pwd)){
-			response.sendRedirect("LoginSuccess.jsp");
-		}else{
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.html");
-			PrintWriter out= response.getWriter();
-			out.println("<font color=red>Either user name or password is wrong.</font>");
-			rd.include(request, response);
-			
+		if(listCustomErrors.size() >= 1) {
+			request.setAttribute("listCustomerError", listCustomErrors);
+			req = request.getRequestDispatcher("login.jsp");
+		}else {
+			req = request.getRequestDispatcher("loginSuccess.jsp");
 		}
 		
+		req.forward(request, response);
+	}  
+	
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher reqre = request.getRequestDispatcher("login.jsp");
+		reqre.forward(request, response);
 	}
 }

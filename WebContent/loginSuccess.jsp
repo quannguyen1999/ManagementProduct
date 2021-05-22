@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
-    pageEncoding="US-ASCII"%>
+	pageEncoding="US-ASCII"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "https://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -7,7 +7,7 @@
 <title>Login Success Page</title>
 </head>
 <body>
-<h3>Hi Pankaj, Login successful.</h3>
-<a href="login.html">Login Page</a>
+	<h3>Hi Pankaj, Login successful.</h3>
+	<a href="login.html">Login Page</a>
 </body>
 </html>
