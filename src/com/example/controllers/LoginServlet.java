@@ -13,20 +13,18 @@ import javax.servlet.http.HttpSession;
 
 import com.example.models.Account;
 import com.example.models.CustomError;
+import com.example.models.TypeAccount;
 import com.example.services.AccountService;
 import com.example.services.impl.AccountDao;
 import com.example.validations.AccountValidator;
 
 @WebServlet(urlPatterns = { "/login" })
 public class LoginServlet extends HttpServlet {
-
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	private static String LOGIN_PAGE = "login.jsp";
-	private static String LOGIN_SUCCESS = "loginSuccess.jsp";
-
 	
 	private AccountService accountService = new AccountDao();
 
@@ -35,17 +33,23 @@ public class LoginServlet extends HttpServlet {
 		RequestDispatcher req = null;
 		String name=request.getParameter("username");  
 		String password=request.getParameter("password");
-
+		Account accountFind = null;
 		List<CustomError> listCustomErrors = AccountValidator.validateCreate(new Account(name, password, null));
 
 		if(listCustomErrors.size() >= 1) {
 			request.setAttribute("listCustomerError", listCustomErrors);
 			req = request.getRequestDispatcher(LOGIN_PAGE);
 		}else {
+			accountFind = accountService.findById(name);
 			HttpSession session = request.getSession();
 			session.setAttribute("username", name);
-			session.setAttribute("typeUser", accountService.findById(name).getTypeAccount().toString());
-			req = request.getRequestDispatcher(LOGIN_SUCCESS);
+			session.setAttribute("typeUser", accountFind.getTypeAccount().toString());
+			if(accountFind.getTypeAccount().equals(TypeAccount.ADMIN)) {
+				response.sendRedirect(request.getContextPath()+"/product-new");
+			}else {
+				response.sendRedirect(request.getContextPath()+"/product");
+			}
+			return;
 		}
 
 		req.forward(request, response);

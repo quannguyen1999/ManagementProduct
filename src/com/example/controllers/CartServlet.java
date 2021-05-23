@@ -99,20 +99,22 @@ public class CartServlet extends HttpServlet{
 		HttpSession session = request.getSession();
 		List<Product> listProducts = (List<Product>) session.getAttribute("listProducts");
 		Float tong = 0f;
-		for(Product product: listProducts) {
-			tong += product.getUnitPrice()*product.getUnitInStock(); 
+		if(listProducts.size() >= 1) {
+			for(Product product: listProducts) {
+				tong += product.getUnitPrice()*product.getUnitInStock(); 
+			}
+			Customer customer = customerService.findById("C101");
+			String idOrder = orderService.createRandomIdOrder();
+			OrderProduct orderProduct = new OrderProduct(idOrder,customer, new Date(System.currentTimeMillis()), tong);
+			orderService.insert(orderProduct);
+			for(Product product: listProducts) {
+				OrderProductPK orderProductPK = new OrderProductPK(idOrder, product.getProductId());
+				OrderDetail orderDetail = new OrderDetail(orderProductPK, product.getUnitInStock(),
+						product.getUnitPrice(), orderProduct, productService.findById(product.getProductId()));
+				orderDetailService.insert(orderDetail);
+			}
 		}
-		Customer customer = customerService.findById("C101");
-		String idOrder = orderService.createRandomIdOrder();
-		OrderProduct orderProduct = new OrderProduct(idOrder,customer, new Date(System.currentTimeMillis()), tong);
-		orderService.insert(orderProduct);
-		for(Product product: listProducts) {
-			OrderProductPK orderProductPK = new OrderProductPK(idOrder, product.getProductId());
-			OrderDetail orderDetail = new OrderDetail(orderProductPK, product.getUnitInStock(),
-					product.getUnitPrice(), orderProduct, product);
-			orderDetailService.insert(orderDetail);
-		}
-		request.setAttribute("listProducts", null);
+		session.setAttribute("listProducts", null);
 	}
 
 
@@ -143,6 +145,7 @@ public class CartServlet extends HttpServlet{
 		}
 		session.setAttribute("listProducts", listProducts);
 	}
+	
 	private RequestDispatcher insertCart(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		RequestDispatcher req = null;

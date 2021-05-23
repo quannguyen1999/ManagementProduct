@@ -82,6 +82,9 @@ public class ProductServlet extends HttpServlet{
 			case "/product-new":
 				reqre =  showNewProduct(request, response);
 				break;
+			case "/product-insert":
+				reqre =  showNewProduct(request, response);
+				break;
 			case "/product-detail":
 				reqre =  showDetailProduct(request, response);
 				break;
