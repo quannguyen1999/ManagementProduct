@@ -90,7 +90,7 @@ tr, td, th {
 							<td style="width: 40%;">${product.name}</td>
 							<td>${product.unitInStock}</td>
 							<td><fmt:formatNumber type="number" maxFractionDigits="3"
-									value="${product.unitPrice }"/></td>
+									value="${product.unitPrice }" /></td>
 							<td><fmt:formatNumber type="number" maxFractionDigits="3"
 									value="${product.unitPrice }" /></td>
 							<td><a
@@ -106,10 +106,8 @@ tr, td, th {
 						<td></td>
 						<td></td>
 						<td style="font-weight: bold;">Grant total</td>
-						<td colspan="2 " style="text-align: left;">
-								<fmt:formatNumber type="number" maxFractionDigits="3"
-									value="${total }" />
-								</td>
+						<td colspan="2 " style="text-align: left;"><fmt:formatNumber
+								type="number" maxFractionDigits="3" value="${total }" /></td>
 					</tr>
 				</c:if>
 			</table>

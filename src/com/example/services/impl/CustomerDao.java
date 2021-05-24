@@ -20,5 +20,9 @@ public class CustomerDao implements CustomerService{
 	public Customer findById(String id) {
 		return genericService.findOne(id);
 	}
+	@Override
+	public Customer findByUserName(String username) {
+		return genericService.Query("from Customer where account like '"+username+"'");
+	}
 
 }

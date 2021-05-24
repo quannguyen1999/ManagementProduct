@@ -52,6 +52,7 @@ public class SecurityFilter implements Filter{
 				|| request.getRequestURI().endsWith(".PNG")) {
 			System.out.println("allow");
 		    chain.doFilter(request, response);
+		    return;
 		}
 		if(logoutRequest) {
 			session=request.getSession();  

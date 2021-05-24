@@ -11,6 +11,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import java.io.File;
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -41,10 +43,6 @@ import com.example.validations.ProductValidator;
 maxFileSize = 1024 * 1024 * 50, // 50MB
 maxRequestSize = 1024 * 1024 * 50) // 50MB
 public class ProductServlet extends HttpServlet{
-	/**
-	 * 
-	 */
-	private static FilesStorageService filesStorageService = new FileStorageDao();
 	private static ProductService productService = new ProductDao();
 	private static final long serialVersionUID = 1L;
 	public static String LIST_PRODUCT = "product.jsp";
@@ -59,7 +57,7 @@ public class ProductServlet extends HttpServlet{
 		try {
 			switch (action) {
 			case "/product-insert":
-				reqre =  insertBook(request, response);
+				reqre = insertBook(request, response);
 				break;
 			case "/product/update":
 				break;
@@ -100,6 +98,17 @@ public class ProductServlet extends HttpServlet{
 
 	private RequestDispatcher showListProduct(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		HttpSession session = request.getSession();
+		if(session != null) {
+			Boolean addSuccessRequest =  session.getAttribute("addSuccess") != null;
+			if(addSuccessRequest) {
+				String type = (String) session.getAttribute("addSuccess");
+				if(type != null) {
+					request.setAttribute("addSuccess", "addSuccess");
+					session.setAttribute("addSuccess", null);
+				}
+			}
+		}
 		request.setAttribute("listProduct", productService.listProducts());
 		return request.getRequestDispatcher(LIST_PRODUCT);
 	}
@@ -122,6 +131,7 @@ public class ProductServlet extends HttpServlet{
 
 	private RequestDispatcher insertBook(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+		System.out.println("insert book");
 		RequestDispatcher req = null;
 
 		String name=request.getParameter("name");  

@@ -1,6 +1,7 @@
 package com.example.controllers;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
@@ -49,8 +50,6 @@ public class CartServlet extends HttpServlet{
 
 	private OrderService orderService = new OrderDao();
 
-	private AccountService accountService = new AccountDao();
-
 	private CustomerService customerService = new CustomerDao();
 
 	private OrderDetailService orderDetailService = new OrderDetailDao();
@@ -95,15 +94,14 @@ public class CartServlet extends HttpServlet{
 
 	private void checkoutCart(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		RequestDispatcher req = null;
 		HttpSession session = request.getSession();
+		Customer customer = customerService.findByUserName((String)session.getAttribute("username"));
 		List<Product> listProducts = (List<Product>) session.getAttribute("listProducts");
 		Float tong = 0f;
 		if(listProducts.size() >= 1) {
 			for(Product product: listProducts) {
 				tong += product.getUnitPrice()*product.getUnitInStock(); 
 			}
-			Customer customer = customerService.findById("C101");
 			String idOrder = orderService.createRandomIdOrder();
 			OrderProduct orderProduct = new OrderProduct(idOrder,customer, new Date(System.currentTimeMillis()), tong);
 			orderService.insert(orderProduct);
@@ -152,7 +150,10 @@ public class CartServlet extends HttpServlet{
 		HttpSession session = request.getSession();
 		List<Product> listProducts = (List<Product>) session.getAttribute("listProducts");
 		int id = Integer.parseInt(request.getParameter("id").isEmpty() ? "-1" : request.getParameter("id"));
+		//get current product in database
 		Product pro = productService.findById(id);
+		
+		//get current product and set unit in stock is 1
 		Product product = new Product(pro.getProductId(),pro.getName(),
 				pro.getUnitPrice(), 
 				1, 
@@ -180,15 +181,13 @@ public class CartServlet extends HttpServlet{
 						result=false;
 						break;
 					}
-				}else {
-					System.out.println(id);
-					System.out.println(listProducts.get(i).getProductId());
 				}
 			}
 			if(result==true) {
 				listProducts.add(product);
 			}
 		}
+		session.setAttribute("addSuccess", "addSuccess");
 		session.setAttribute("listProducts", listProducts);
 		return request.getRequestDispatcher(ProductServlet.LIST_PRODUCT);
 	}

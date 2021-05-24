@@ -54,7 +54,7 @@ public class GenericDao<T> implements GenericService<T>{
 	@Override
 	public T Query(String sql) {
 		// TODO Auto-generated method stub
-		return (T) em.createNativeQuery(sql).getSingleResult();
+		return (T) em.createQuery(sql).getSingleResult();
 	}
 
 
