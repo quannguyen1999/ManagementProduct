@@ -35,7 +35,7 @@ import com.example.validations.ProductValidator;
 @WebServlet(urlPatterns = {
 		"/product",
 		"/product-new",
-"/product-insert",
+		"/product-insert",
 "/product-detail"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
 maxFileSize = 1024 * 1024 * 50, // 50MB
@@ -108,7 +108,7 @@ public class ProductServlet extends HttpServlet{
 			throws ServletException, IOException {
 		return request.getRequestDispatcher(ADD_PRODUCT);
 	}
-	
+
 	private RequestDispatcher showDetailProduct(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		int id = Integer.parseInt(request.getParameter("id").isEmpty() ? "-1" : request.getParameter("id"));
@@ -123,7 +123,7 @@ public class ProductServlet extends HttpServlet{
 	private RequestDispatcher insertBook(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		RequestDispatcher req = null;
-		
+
 		String name=request.getParameter("name");  
 		Float unitPrice = Float.parseFloat(request.getParameter("unitPrice").isEmpty() ? "0" : request.getParameter("unitPrice"));
 		int unitInStock = Integer.parseInt(request.getParameter("unitInStock").isEmpty() ? "0" : request.getParameter("unitInStock"));
@@ -131,7 +131,7 @@ public class ProductServlet extends HttpServlet{
 		String manufacturer =  request.getParameter("manufacturer");
 		String category =  request.getParameter("category");
 		int typeConditionProductNumber = Integer.parseInt(request.getParameter("typeConditionProduct").isEmpty() ? "0" :request.getParameter("typeConditionProduct"));
-		
+
 		TypeConditionProduct typeConditionProduct;
 		if(typeConditionProductNumber == 0) {
 			typeConditionProduct = TypeConditionProduct.NEW;
@@ -140,12 +140,12 @@ public class ProductServlet extends HttpServlet{
 		}else {
 			typeConditionProduct = TypeConditionProduct.REFURBISHED;
 		}
-		
+
 		Product product = new Product(name, unitPrice, unitInStock, description, manufacturer, category,
 				typeConditionProduct, null);
-	
+
 		List<CustomError> listCustomErrors = ProductValidator.validateInsertProduct(product, request);
-		
+
 		if(listCustomErrors.size() >= 1) {
 			request.setAttribute("listCustomerError", listCustomErrors);
 			return request.getRequestDispatcher(ADD_PRODUCT);

@@ -41,19 +41,24 @@ public class SecurityFilter implements Filter{
 		String loginURI = request.getContextPath() + "/login";
 		String logoutURI = request.getContextPath() + "/logout";
 		String productURI = request.getContextPath() + "/product";
+		String productDetailURL = request.getContextPath() + "/product-detail";
 
 		boolean loggedIn = session != null && session.getAttribute("username") != null;
 		boolean loginRequest = request.getRequestURI().equals(loginURI);
 		boolean logoutRequest = request.getRequestURI().equals(logoutURI);
 		boolean productRequest = request.getRequestURI().equals(productURI);
+		boolean productDetailRequest = request.getRequestURI().equals(productDetailURL);
 		if (request.getRequestURI().endsWith(".png") || request.getRequestURI().endsWith(".jpg")
 				|| request.getRequestURI().endsWith(".PNG")) {
+			System.out.println("allow");
 		    chain.doFilter(request, response);
 		}
 		if(logoutRequest) {
 			session=request.getSession();  
 			session.invalidate();  
 			response.sendRedirect(loginURI);
+		}else if(productRequest || productDetailRequest) {
+			chain.doFilter(request, response);
 		}else if(loginRequest) {
 			if(session != null && session.getAttribute("username") != null) {
 				response.sendRedirect(productURI);

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=US-ASCII"
 	pageEncoding="US-ASCII"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "https://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -33,8 +34,8 @@
         }
         
         .image {
-            width: 100px;
-            height: 120px;
+            width: 240px;
+            height: 260px;
             margin-bottom: 5px;
         }
         
@@ -59,7 +60,11 @@
         <header class="col-md-12" style="height: 200px;background-color: #EEEEEE; padding-top:30px;">
 
             <span class=" header-right">
-            		<a style="background-color: red;" class="btn btn-danger" href="/ManagementProduct/logout"><i class="fa fa-logout"></i> Logout</a>
+            		<% if(session.getAttribute("username") == null){ %>
+            			<a style="background-color: red;" class="btn btn-danger" href="/ManagementProduct/login"><i class="fa fa-logout"></i>Login</a>
+            		<%}else{ %>
+            			<a style="background-color: red;" class="btn btn-danger" href="/ManagementProduct/logout"><i class="fa fa-logout"></i> Logout</a>
+            		<%} %>
 					<a style="background-color: white;" class="btn" href="/ManagementProduct/cart"><i class="fa fa-shopping-cart"></i> View Cart</a><br>
 				</span>
             <p style="font-size: 40pt; ">Products</p>
@@ -75,7 +80,8 @@
 		                    <img src="images/${product.image}" width="500" height="750" class="image">
 		                    <input type="hidden" name="modelDescription" value="${product.description}" />
 		                    <p>${product.description}</p>
-		                    <p>${product.unitPrice} USD</p>
+		                    <p><fmt:formatNumber type="number" maxFractionDigits="3"
+									value="${product.unitPrice }"/> USD</p>
 		                    <p>${product.unitInStock} units in stock</p>
 		                    <a  class="btn btn-primary" href="/ManagementProduct/product-detail?id=<c:out value='${product.productId}'/>">Detail</a>
 		                    <a  class="btn btn-warning" href="/ManagementProduct/cart-order?id=<c:out value='${product.productId}'/>"><i class="fa fa-shopping-cart"></i>Order now</a>

@@ -189,10 +189,6 @@ public class CartServlet extends HttpServlet{
 				listProducts.add(product);
 			}
 		}
-		System.out.println();
-		listProducts.forEach(t->{
-			System.out.println(t);
-		});
 		session.setAttribute("listProducts", listProducts);
 		return request.getRequestDispatcher(ProductServlet.LIST_PRODUCT);
 	}

@@ -42,6 +42,7 @@ public class AccountValidator {
 
 		if(accountFind == null) {
 			listCustomErrors.add(new CustomError(USERNAME, USERNAME_NOT_EXISTS));
+			return listCustomErrors;
 		}
 		
 		if(accountService.comparePassword(accountFind.getPassword(),account.getPassword()) == false) {

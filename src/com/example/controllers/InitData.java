@@ -31,7 +31,6 @@ import com.example.services.impl.OrderDetailDao;
 import com.example.services.impl.ProductDao;
 
 public class InitData {
-	//	private static EntityManager em;
 	private static Validator validator;
 	public static void main(String[] args) {
 		AccountService accountService = new AccountDao();
