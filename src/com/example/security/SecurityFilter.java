@@ -11,13 +11,10 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.example.controllers.ProductServlet;
-import com.example.models.Account;
 import com.example.models.TypeAccount;
 
 //Tất cả các request phải qua class này thực thi trước 
@@ -25,7 +22,9 @@ import com.example.models.TypeAccount;
 public class SecurityFilter implements Filter{
 	private ServletContext context;
 
+	//định nghĩa các đường dẫn file error
 	private static String ERROR_403 = "403.jsp";
+	
 	public void init(FilterConfig fConfig) throws ServletException {
 		this.context = fConfig.getServletContext();
 		this.context.log("AuthenticationFilter initialized");
@@ -38,6 +37,7 @@ public class SecurityFilter implements Filter{
 		HttpServletResponse response = (HttpServletResponse) res;
 		
 		HttpSession session = request.getSession(false);
+		
 		String loginURI = request.getContextPath() + "/login";
 		String logoutURI = request.getContextPath() + "/logout";
 		String productURI = request.getContextPath() + "/product";
@@ -72,23 +72,6 @@ public class SecurityFilter implements Filter{
 			session.setAttribute("message","please login first");
 			response.sendRedirect(loginURI);
 		}
-//		if(logoutURL) {
-//			System.out.println("ok 1");
-//			session=request.getSession();  
-//			session.invalidate();  
-//			response.sendRedirect(loginURI);
-//		}else if(loginRequest && loggedIn) {
-//			System.out.println("ok 2");
-//			response.sendRedirect(request.getContextPath() + "/product");
-//		}else if (
-//				//tất cả request cho phép đều vào đây
-//				loggedIn || 
-//				loginRequest) {
-//			response.sendRedirect(request.getContextPath() + "/product");
-//		} else {
-//			System.out.println("ok 4");
-//			response.sendRedirect(loginURI);
-//		}
 	}
 	
 	public void handlerError(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -139,15 +122,6 @@ public class SecurityFilter implements Filter{
 				handlerError(request, response);
 				return;
 			}
-//			if(request.getRequestURI().equals(productNew) ||
-//					request.getRequestURI().equals(productInsert) ||
-//					request.getRequestURI().equals(productDetail)
-//					) {
-//				handlerError(request, response);
-//				return;
-//			}else {
-//				chain.doFilter(request, response);
-//			}
 			break;
 		}
 	}

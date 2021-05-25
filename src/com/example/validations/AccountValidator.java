@@ -2,31 +2,25 @@ package com.example.validations;
 
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-
+import com.example.dao.AccountDao;
+import com.example.dao.GenericDao;
+import com.example.dao.impl.AccountImpl;
+import com.example.dao.impl.GenericImpl;
 import com.example.models.Account;
 import com.example.models.CustomError;
-import com.example.models.TypeAccount;
-import com.example.services.AccountService;
-import com.example.services.GenericService;
-import com.example.services.impl.AccountDao;
-import com.example.services.impl.GenericDao;
 
+//Để validator dữ liệu
 public class AccountValidator {
+	//khai báo các field
 	private static String USERNAME = "userName";
-
 	private static String PASSWORD = "password";
 
-	private static String TYPEACCOUNT = "typeAccount";
-
+	//khai báo các mesage error
 	private static String USERNAME_NOT_EXISTS = "username not exists";
-	
 	private static String PASSWORD_INCORRECT = "password not correct";
 
-	private static GenericService<Account> genericService = new GenericDao<>(Account.class);
-
-	private static AccountService accountService = new AccountDao();
+	private static GenericDao<Account> genericService = new GenericImpl(Account.class);
+	private static AccountDao accountService = new AccountImpl();
 
 	public static List<CustomError> validateCreate(Account account) {
 		

@@ -11,35 +11,41 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.example.dao.AccountDao;
+import com.example.dao.impl.AccountImpl;
 import com.example.models.Account;
 import com.example.models.CustomError;
 import com.example.models.TypeAccount;
-import com.example.services.AccountService;
-import com.example.services.impl.AccountDao;
 import com.example.validations.AccountValidator;
 
+//định nghịa các url được phép vào servlet này
 @WebServlet(urlPatterns = { "/login" })
 public class LoginServlet extends HttpServlet {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
+	//định nghĩa các dường dẫn file jsp
 	private static String LOGIN_PAGE = "login.jsp";
 	
-	private AccountService accountService = new AccountDao();
+	//gọi các service
+	private AccountDao accountService = new AccountImpl();
 
+	//thực hiên chức năng đăng nhập (post)
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)  
 			throws ServletException, IOException {  
 		RequestDispatcher req = null;
 		String name=request.getParameter("username");  
 		String password=request.getParameter("password");
 		Account accountFind = null;
+		
+		//xác minh dữ liệu
 		List<CustomError> listCustomErrors = AccountValidator.validateCreate(new Account(name, password, null));
 
+		//nếu có lỗi thì trả về lại trang login
 		if(listCustomErrors.size() >= 1) {
 			request.setAttribute("listCustomerError", listCustomErrors);
 			req = request.getRequestDispatcher(LOGIN_PAGE);
 		}else {
+			//ngược lại nếu thành công thì chuyển hướng sang trang thích hợp
 			accountFind = accountService.findById(name);
 			HttpSession session = request.getSession();
 			session.setAttribute("username", name);
@@ -51,23 +57,15 @@ public class LoginServlet extends HttpServlet {
 			}
 			return;
 		}
-
 		req.forward(request, response);
 	}  
 
+	//chuyển hướng tới trang login (get)
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher reqre = null;
 		String action = request.getServletPath();
-		try {
-			switch (action) {
-			default:
-				reqre =  request.getRequestDispatcher(LOGIN_PAGE);
-				reqre.forward(request, response);
-				break;
-			}
-		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
-		}
+		reqre =  request.getRequestDispatcher(LOGIN_PAGE);
+		reqre.forward(request, response);
 	}
 }
