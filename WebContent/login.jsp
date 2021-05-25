@@ -78,8 +78,47 @@ section {
 	color: red;
 }
 </style>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"
+	rel="stylesheet" />
+<script th:inline="javascript">
+	toastr.options = {
+		"closeButton" : true,
+		"debug" : true,
+		"newestOnTop" : true,
+		"progressBar" : true,
+		"positionClass" : "toast-bottom-right",
+		"preventDuplicates" : false,
+		"showDuration" : "300",
+		"hideDuration" : "1000",
+		"timeOut" : "5000",
+		"extendedTimeOut" : "1000",
+		"showEasing" : "swing",
+		"hideEasing" : "linear",
+		"showMethod" : "show",
+		"hideMethod" : "hide"
+	}
+	function showMessage(message) {
+		toastr["error"](message);
+	}
+</script>
 </head>
 <body>
+	<% if(session != null && session.getAttribute("message") != null){ %>
+	<% String message = (String) session.getAttribute("message"); %>
+	<% if(message != null) {%>
+	<% pageContext.setAttribute("message",message); %>
+	<c:set var="message" value="${message}" />
+	<script>
+				window.addEventListener("load", function() {
+					showMessage('<c:out value="${message}"/>')
+				});
+			</script>
+	<% session.setAttribute("message", null); %>
+	<%} %>
+	<%}%>
 	<div class="container">
 		<header>
 		<p style="font-size: 40pt;">Mobile Store</p>

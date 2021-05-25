@@ -59,8 +59,6 @@ public class ProductServlet extends HttpServlet{
 			case "/product-insert":
 				reqre = insertBook(request, response);
 				break;
-			case "/product/update":
-				break;
 			default:
 				break;
 			}
@@ -98,17 +96,17 @@ public class ProductServlet extends HttpServlet{
 
 	private RequestDispatcher showListProduct(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		HttpSession session = request.getSession();
-		if(session != null) {
-			Boolean addSuccessRequest =  session.getAttribute("addSuccess") != null;
-			if(addSuccessRequest) {
-				String type = (String) session.getAttribute("addSuccess");
-				if(type != null) {
-					request.setAttribute("addSuccess", "addSuccess");
-					session.setAttribute("addSuccess", null);
-				}
-			}
-		}
+//		HttpSession session = request.getSession();
+//		if(session != null) {
+//			Boolean addSuccessRequest =  session.getAttribute("success") != null;
+//			if(addSuccessRequest) {
+//				String type = (String) session.getAttribute("success");
+//				if(type != null) {
+//					request.setAttribute("success", "addSuccess");
+//					session.setAttribute("success", null);
+//				}
+//			}
+//		}
 		request.setAttribute("listProduct", productService.listProducts());
 		return request.getRequestDispatcher(LIST_PRODUCT);
 	}
@@ -133,7 +131,7 @@ public class ProductServlet extends HttpServlet{
 			throws IOException, ServletException {
 		System.out.println("insert book");
 		RequestDispatcher req = null;
-
+		HttpSession session = request.getSession();
 		String name=request.getParameter("name");  
 		Float unitPrice = Float.parseFloat(request.getParameter("unitPrice").isEmpty() ? "0" : request.getParameter("unitPrice"));
 		int unitInStock = Integer.parseInt(request.getParameter("unitInStock").isEmpty() ? "0" : request.getParameter("unitInStock"));
@@ -161,7 +159,7 @@ public class ProductServlet extends HttpServlet{
 			return request.getRequestDispatcher(ADD_PRODUCT);
 		}else {
 			productService.insert(product, request);
-			request.setAttribute("listCustomerError", Arrays.asList(new CustomError("name", "add success")));
+			session.setAttribute("success", "add success");
 			return request.getRequestDispatcher(ADD_PRODUCT);
 		}
 	}

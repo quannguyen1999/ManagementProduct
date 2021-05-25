@@ -50,7 +50,6 @@ public class SecurityFilter implements Filter{
 		boolean productDetailRequest = request.getRequestURI().equals(productDetailURL);
 		if (request.getRequestURI().endsWith(".png") || request.getRequestURI().endsWith(".jpg")
 				|| request.getRequestURI().endsWith(".PNG")) {
-			System.out.println("allow");
 		    chain.doFilter(request, response);
 		    return;
 		}
@@ -69,6 +68,8 @@ public class SecurityFilter implements Filter{
 		}else if(session != null && session.getAttribute("username") != null) {
 			checkRole(session, request, response, chain);
 		}else {
+			session = request.getSession();
+			session.setAttribute("message","please login first");
 			response.sendRedirect(loginURI);
 		}
 //		if(logoutURL) {

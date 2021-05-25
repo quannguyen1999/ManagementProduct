@@ -80,20 +80,41 @@ section {
 		"showMethod" : "show",
 		"hideMethod" : "hide"
 	}
-	function myMessage() {
-		toastr["success"]("Add product success");
+	function dialogSuccess(message) {
+		toastr["success"](message);
 	}
+	function dialogError(message){
+		toastr["error"](message);
+	}
+		
 </script>
 </head>
 <body>
-	<c:if test="${not empty addSuccess}">
-		<script>
-			window.addEventListener("load", function() {
-				myMessage()
-			});
-		</script>
-    }
-	</c:if>
+	<% if(session != null && session.getAttribute("success") != null){ %>
+		<% String message = (String) session.getAttribute("success"); %>
+		<% if(message != null) {%>
+			<% pageContext.setAttribute("message",message); %>
+			 <c:set var="message" value="${message}" />
+			<script>
+				window.addEventListener("load", function() {
+					dialogSuccess('<c:out value="${message}"/>')
+				});
+			</script>
+			<% session.setAttribute("success", null); %>
+		<%} %>
+	<%} else{%>
+		<% String message = (String) session.getAttribute("error"); %>
+		<% if(message != null) {%>
+			<% pageContext.setAttribute("message",message); %>
+			 <c:set var="message" value="${message}" />
+			<script>
+				window.addEventListener("load", function() {
+					dialogError('<c:out value="${message}"/>')
+				});
+			</script>
+			<% session.setAttribute("error", null); %>
+		<%} %>
+	<%} %>
 	<div class="container">
 		<header class="col-md-12"
 			style="height: 200px;background-color: #EEEEEE; padding-top:30px;">
@@ -128,7 +149,7 @@ section {
 								value="${product.unitPrice }" />
 							USD
 						</p>
-						<p>${product.unitInStock}unitsinstock</p>
+						<p>${product.unitInStock} unitsinstock</p>
 						<a class="btn btn-primary"
 							href="/ManagementProduct/product-detail?id=<c:out value='${product.productId}'/>">Detail</a>
 						<a class="btn btn-warning"

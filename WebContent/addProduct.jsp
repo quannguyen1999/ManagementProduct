@@ -84,8 +84,49 @@ table {
 	color: red;
 }
 </style>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css"
+	rel="stylesheet" />
+<script th:inline="javascript">
+	toastr.options = {
+		"closeButton" : true,
+		"debug" : true,
+		"newestOnTop" : true,
+		"progressBar" : true,
+		"positionClass" : "toast-bottom-right",
+		"preventDuplicates" : false,
+		"showDuration" : "300",
+		"hideDuration" : "1000",
+		"timeOut" : "5000",
+		"extendedTimeOut" : "1000",
+		"showEasing" : "swing",
+		"hideEasing" : "linear",
+		"showMethod" : "show",
+		"hideMethod" : "hide"
+	}
+	function dialogSuccess(message) {
+		toastr["success"](message);
+	}
+	
+		
+</script>
 </head>
 <body>
+	<% if(session != null && session.getAttribute("success") != null){ %>
+	<% String message = (String) session.getAttribute("success"); %>
+	<% if(message != null) {%>
+	<% pageContext.setAttribute("message",message); %>
+	<c:set var="message" value="${message}" />
+	<script>
+				window.addEventListener("load", function() {
+					dialogSuccess('<c:out value="${message}"/>')
+				});
+			</script>
+	<% session.setAttribute("success", null); %>
+	<%} %>
+	<%}%>
 	<div class="container">
 		<header> <a href="/ManagementProduct/logout"
 			class="btn btn-danger" style="float: right;">Logout</a>

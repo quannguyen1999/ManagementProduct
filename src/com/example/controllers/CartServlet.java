@@ -41,11 +41,6 @@ import com.example.services.impl.ProductDao;
 		"/cart-remove",
 "/cart-checkout"})
 public class CartServlet extends HttpServlet{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
 	private ProductService productService = new ProductDao();
 
 	private OrderService orderService = new OrderDao();
@@ -80,6 +75,7 @@ public class CartServlet extends HttpServlet{
 				return;
 			case "/cart-checkout":
 				checkoutCart(request, response);
+				System.out.println("redirect cart");
 				response.sendRedirect(request.getContextPath()+"/cart");
 				break;
 			case "/cart-order-detail":
@@ -94,11 +90,12 @@ public class CartServlet extends HttpServlet{
 
 	private void checkoutCart(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
+		System.out.println("checkout request");
 		HttpSession session = request.getSession();
 		Customer customer = customerService.findByUserName((String)session.getAttribute("username"));
 		List<Product> listProducts = (List<Product>) session.getAttribute("listProducts");
 		Float tong = 0f;
-		if(listProducts.size() >= 1) {
+		if(listProducts != null && listProducts.size() >= 1) {
 			for(Product product: listProducts) {
 				tong += product.getUnitPrice()*product.getUnitInStock(); 
 			}
@@ -111,8 +108,13 @@ public class CartServlet extends HttpServlet{
 						product.getUnitPrice(), orderProduct, productService.findById(product.getProductId()));
 				orderDetailService.insert(orderDetail);
 			}
+			session.setAttribute("success", "checkout success");
+			session.setAttribute("listProducts", null);
+		}else {
+			session.setAttribute("error", "checkout don't have any item");
 		}
-		session.setAttribute("listProducts", null);
+
+		System.out.println("done");
 	}
 
 
@@ -139,11 +141,13 @@ public class CartServlet extends HttpServlet{
 		for(int i=0;i<listProducts.size();i++) {
 			if(listProducts.get(i).getProductId() == id) {
 				listProducts.remove(listProducts.get(i));
+				session.setAttribute("success", "remove success");
+				break;
 			}
 		}
 		session.setAttribute("listProducts", listProducts);
 	}
-	
+
 	private RequestDispatcher insertCart(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
 		RequestDispatcher req = null;
@@ -152,7 +156,7 @@ public class CartServlet extends HttpServlet{
 		int id = Integer.parseInt(request.getParameter("id").isEmpty() ? "-1" : request.getParameter("id"));
 		//get current product in database
 		Product pro = productService.findById(id);
-		
+
 		//get current product and set unit in stock is 1
 		Product product = new Product(pro.getProductId(),pro.getName(),
 				pro.getUnitPrice(), 
@@ -166,6 +170,7 @@ public class CartServlet extends HttpServlet{
 			if(pro.getUnitInStock() <= 0) {
 				request.setAttribute("error", "product out of stock");
 			}else {
+				session.setAttribute("success", "add success");
 				listProducts.add(product);
 			}
 		}else {
@@ -173,6 +178,7 @@ public class CartServlet extends HttpServlet{
 			for(int i=0;i<listProducts.size();i++) {
 				if(listProducts.get(i).getProductId() == id) {
 					if(listProducts.get(i).getUnitInStock()<pro.getUnitInStock()) {
+						session.setAttribute("success", "add success");
 						listProducts.get(i).setUnitInStock(listProducts.get(i).getUnitInStock()+1);
 						result=false;
 						break;
@@ -184,10 +190,11 @@ public class CartServlet extends HttpServlet{
 				}
 			}
 			if(result==true) {
+				System.out.println("ok 2");
 				listProducts.add(product);
+				session.setAttribute("success", "add success");
 			}
 		}
-		session.setAttribute("addSuccess", "addSuccess");
 		session.setAttribute("listProducts", listProducts);
 		return request.getRequestDispatcher(ProductServlet.LIST_PRODUCT);
 	}
